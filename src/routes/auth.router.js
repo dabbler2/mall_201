@@ -14,7 +14,7 @@ const authController = new AuthController(authService)
 router.post('/auth/signUp', authController.signUp)
 
 // 로그인
-//router.post('/auth/signIn', authController.signIn)
+router.post('/auth/signIn', authController.signIn)
 
 router.get('/', async (req,res) => {
 	res.json("Hi")
