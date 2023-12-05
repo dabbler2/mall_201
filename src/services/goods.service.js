@@ -3,6 +3,12 @@ export class GoodsService {
 	
 	createGood = async (goodsName, userName, userId, content) => await this.goodsRepository.createGood(goodsName, userName, userId, content)
 	
+	findGood = async(goodsId) => {
+		const good = await this.goodsRepository.findGood(goodsId)
+		if(!good) throw {code:400, message:"해당 상품이 없습니다."}
+		return good
+	}
+	
 	getGoods = async () => await this.goodsRepository.getGoods()
 	
 	deleteGood = async(goodsId) => {

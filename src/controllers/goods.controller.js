@@ -19,6 +19,18 @@ export class GoodsController {
 	// 전체 상품 조회
 	getGoods = async (req,res) => res.json({goods:await this.goodsService.getGoods()})
 	
+	// 상품 상세 조회
+	getGoodDetail = async(req,res,next) => {
+		try{
+			const goodsId = +req.params.goodsId
+			const good = await this.goodsService.findGood(goodsId)
+			res.json({good})
+		}catch(e){
+			if(e.code===400) return res.status(400).json({message: e.message})
+			next(e)
+		}
+	}
+	
 	// 상품 삭제
 	deleteGood = async(req,res,next) => {
 		try{

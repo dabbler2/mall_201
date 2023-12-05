@@ -15,6 +15,9 @@ const goodsController = new GoodsController(goodsService)
 // 전체 상품 조회
 router.get('/goods', goodsController.getGoods)
 
+// 상품 상세 조회
+router.get('/goods/:goodsId', goodsController.getGoodDetail)
+
 // 상품 등록
 router.post('/goods', goodsController.postGood)
 
