@@ -3,9 +3,9 @@ import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 dotenv.config()
 
-export class AuthController {
-	constructor(authService){
-		this.authService = authService
+export class UsersController {
+	constructor(usersService){
+		this.usersService = usersService
 	}
 	
 	// 회원가입
@@ -21,7 +21,7 @@ export class AuthController {
 			if (password !== confirmPW)
 				return res.status(400).json({message: '확인용 비밀번호가 일치하지 않습니다.'})
 			const hashPW = bcrypt.hashSync(password, +process.env.SALT_ROUND)
-			const createdUser = await this.authService.createUser(email,userName,hashPW)
+			const createdUser = await this.usersService.createUser(email,userName,hashPW)
 			return res.status(201).json({email,userName,message:'회원가입이 완료되었습니다.'})
 		}catch(e){next(e)}
 	}
@@ -30,11 +30,20 @@ export class AuthController {
 	signIn = async(req,res,next) => {
 		const {email, password} = req.body
 		if(!email || !password) return res.status(400).json({message: '이메일이나 비밀번호를 확인해주세요.'})
-		const existUser = await this.authService.findUser(email)
+		const existUser = await this.usersService.findUser({email})
 		if(!existUser || !bcrypt.compareSync(password, existUser.hashPW)) return res.status(400).json({message: '이메일이나 비밀번호를 확인해주세요.'})
 		const accessToken = jwt.sign({userID: existUser.userID}, process.env.ACCESS_TOKEN_KEY, {expiresIn: '100m'})
 		res.cookie('accessToken', accessToken, {httpOnly: true,
             expires: new Date(Date.now()+6000000)})
 		res.json({email,message: '로그인에 성공했습니다.'})
+	}
+	
+	// 사용자 정보 확인
+	getUserInfo = async(req,res,next) => {
+		const userId = +req.params.userId
+		const existUser = await this.usersService.findUser({userId})
+		if(!existUser) return res.status(400).json({message: '해당 사용자가 존재하지 않습니다.'})
+		const {email,userName,createdAt} = existUser
+		res.json({email,userName,createdAt,message: '사용자 정보를 불러왔습니다.'})
 	}
 }
