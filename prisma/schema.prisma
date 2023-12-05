@@ -11,25 +11,30 @@ datasource db {
 }
 
 model Users{
-	userId Int @id @default(autoincrement()) @map("userId")
-	email String @unique @map("email") @db.VarChar(70)
-	userName String @map("name") @db.VarChar(50)
-	hashPW String @map("hashPW") @db.VarChar(100)
-	createdAt DateTime @default(now()) @map("createdAt")
-	updatedAt DateTime @updatedAt @map("updatedAt")
+	userId Int @id @default(autoincrement())
+	email String @unique @db.VarChar(70)
+	userName String @db.VarChar(50)
+	hashPW String @db.VarChar(100)
+	createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
 	Goods Goods[]
 	@@map("Users")
 }
 
 model Goods{
-	goodsId Int @id @default(autoincrement()) @map("goodsId")
-	userId Int @map("userId")
-	userName String @map("userName") @db.VarChar(50)
-	goodsName String @map("goodsName") @db.VarChar(70)
-	content String? @map("content") @db.Text
-	status Int @db.TinyInt @map("status")
-	createdAt DateTime @default(now()) @map("createdAt")
-	updatedAt DateTime @updatedAt @map("updatedAt")
-	User Users @relation(fields:[userId], references:[userId], onDelete:Cascade)
+	goodsId Int @id @default(autoincrement())
+	userId Int?
+	userName String @db.VarChar(50)
+	goodsName String @db.VarChar(70)
+	content String? @db.Text
+	status Status @default(FOR_SALE)
+	createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
+	User Users? @relation(fields:[userId], references:[userId], onDelete:SetNull)
 	@@map("Goods")
+}
+
+enum Status {
+	FOR_SALE
+	SOLD_OUT
 }

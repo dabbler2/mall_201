@@ -10,4 +10,15 @@ const goodsRepository = new GoodsRepository(prisma)
 const goodsService = new GoodsService(goodsRepository)
 const goodsController = new GoodsController(goodsService)
 
+// 조회 빼고 인증 넣기
+
+// 전체 상품 조회
+router.get('/goods', goodsController.getGoods)
+
+// 상품 등록
+router.post('/goods', goodsController.postGood)
+
+// 상품 삭제
+router.delete('/goods/:goodsId', goodsController.deleteGood)
+
 export default router
