@@ -1,10 +1,12 @@
 import express from 'express'
 import usersRouter from './routes/users.router.js'
 import goodsRouter from './routes/goods.router.js'
-import errorMiddleware from "./middlewares/error-handler.middleware.js"
+import errorMiddleware from './middlewares/error-handler.middleware.js'
+import cookieParser from 'cookie-parser'
 const app = express()
 
 app.use(express.json())
+app.use(cookieParser())
 app.use('/api',[usersRouter, goodsRouter])
 app.use(errorMiddleware)
 

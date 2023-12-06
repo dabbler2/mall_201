@@ -22,10 +22,10 @@ model Users{
 }
 
 model Goods{
-	goodsId Int @id @default(autoincrement())
+	goodId Int @id @default(autoincrement())
 	userId Int?
 	userName String @db.VarChar(50)
-	goodsName String @db.VarChar(70)
+	goodName String @db.VarChar(70)
 	content String? @db.Text
 	status Status @default(FOR_SALE)
 	createdAt DateTime @default(now())
