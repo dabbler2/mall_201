@@ -31,6 +31,20 @@ export class GoodsController {
 		}
 	}
 	
+	// 상품 수정
+	updateGood = async(req,res,next) => {
+		try{
+			const goodsId = +req.params.goodsId
+			const {goodsName, content, status} = req.body
+			if(!goodsName && !content && !status) return res.status(401).json({message: '수정할 내용을 입력해주세요.'})
+			const good = await this.goodsService.updateGood(goodsId,goodsName,content,status)
+			res.status(201).json({good})
+		}catch(e){
+			if(e.code===400) return res.status(400).json({message: e.message})
+			next(e)
+		}
+	}
+	
 	// 상품 삭제
 	deleteGood = async(req,res,next) => {
 		try{

@@ -11,6 +11,12 @@ export class GoodsService {
 	
 	getGoods = async () => await this.goodsRepository.getGoods()
 	
+	updateGood = async(goodsId,goodsName,content,status) => {
+		try{
+			return await this.goodsRepository.updateGood(goodsId,goodsName,content,status)
+		}catch(e){throw e}
+	}
+	
 	deleteGood = async(goodsId) => {
 		try{
 			await this.goodsRepository.deleteGood(goodsId)

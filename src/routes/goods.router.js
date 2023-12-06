@@ -21,6 +21,9 @@ router.get('/goods/:goodsId', goodsController.getGoodDetail)
 // 상품 등록
 router.post('/goods', goodsController.postGood)
 
+// 상품 수정
+router.patch('/goods/:goodsId', goodsController.updateGood)
+
 // 상품 삭제
 router.delete('/goods/:goodsId', goodsController.deleteGood)
 

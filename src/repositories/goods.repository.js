@@ -7,6 +7,15 @@ export class GoodsRepository {
 	
 	findGood = async(goodsId) => await this.prisma.goods.findUnique({where:{goodsId}})
 	
+	updateGood = async(goodsId,goodsName,content,status) => {
+		try{
+			return await this.prisma.goods.update({where:{goodsId},data:{goodsName,content,status}})
+		}catch(e){
+			console.log(e)
+			throw {code:400, message:"해당 상품이 없습니다."}
+		}
+	}
+	
 	deleteGood = async(goodsId) => {
 		try{
 			await this.prisma.goods.delete({where:{goodsId}})
