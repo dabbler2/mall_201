@@ -33,7 +33,9 @@ export class UsersController {
 		const existUser = await this.usersService.findUser({email})
 		if(!existUser || !bcrypt.compareSync(password, existUser.hashPW)) return res.status(400).json({message: '이메일이나 비밀번호를 확인해주세요.'})
 		const accessToken = jwt.sign({userId: existUser.userId}, process.env.ACCESS_TOKEN_KEY, {expiresIn: '30m'})
-		res.cookie('accessToken', accessToken, {httpOnly: true, expires: new Date(Date.now()+1800000)})
+		const refreshToken = jwt.sign({userId: existUser.userId}, process.env.REFRESH_TOKEN_KEY, {expiresIn: '1d'})
+		res.cookie('accessToken', accessToken, {httpOnly: true,expires: new Date(Date.now()+1800000)})
+		res.cookie('refreshToken', refreshToken, {httpOnly: true,expires: new Date(Date.now()+86400000)})
 		res.json({email,message: '로그인에 성공했습니다.'})
 	}
 	

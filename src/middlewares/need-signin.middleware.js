@@ -11,7 +11,6 @@ const usersService = new UsersService(usersRepository)
 export const needSignIn = async(req,res,next) => {
 	const accessToken = req.cookies.accessToken
 	if(!accessToken) return res.status(401).json({message:'로그인이 필요한 페이지입니다.'})
-	console.log(accessToken)
 	
 	try{
 		const {userId} = jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY)

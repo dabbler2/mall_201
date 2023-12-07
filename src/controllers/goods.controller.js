@@ -35,8 +35,10 @@ export class GoodsController {
 	updateGood = async(req,res,next) => {
 		try{
 			const goodId = +req.params.goodId
-			const {goodName, content, status} = req.body
+			const {goodName, content} = req.body
+			let status = req.body.status
 			if(!goodName && !content && !status) return res.status(400).json({message: '수정할 내용을 입력해주세요.'})
+			if(status!==undefined && status!=='SOLD_OUT') status = 'FOR_SALE'
 			const good = await this.goodsService.findGood(goodId)
 			if(!good) return res.status(400).json({message: '해당 상품이 없습니다.'})
 			if(good.userId!==res.locals.userId) return res.status(401).json({message: '수정 권한이 없습니다.'})
