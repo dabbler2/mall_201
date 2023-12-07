@@ -1,8 +1,8 @@
 import express from 'express'
-import { prisma } from '../utils/prisma/index.js'
-import { GoodsRepository } from '../repositories/goods.repository.js'
-import { GoodsService } from '../services/goods.service.js'
-import { GoodsController } from '../controllers/goods.controller.js'
+import {prisma} from '../utils/prisma/index.js'
+import {GoodsRepository} from '../repositories/goods.repository.js'
+import {GoodsService} from '../services/goods.service.js'
+import {GoodsController} from '../controllers/goods.controller.js'
 import {needSignIn} from '../middlewares/need-signin.middleware.js'
 
 const router = express.Router()

@@ -1,8 +1,9 @@
 import express from 'express'
-import { prisma } from '../utils/prisma/index.js'
-import { UsersRepository } from '../repositories/users.repository.js'
-import { UsersService } from '../services/users.service.js'
-import { UsersController } from '../controllers/users.controller.js'
+import {prisma} from '../utils/prisma/index.js'
+import {UsersRepository} from '../repositories/users.repository.js'
+import {UsersService} from '../services/users.service.js'
+import {UsersController} from '../controllers/users.controller.js'
+import {needSignIn} from '../middlewares/need-signin.middleware.js'
 
 const router = express.Router()
 
@@ -19,8 +20,14 @@ router.post('/auth/signIn', usersController.signIn)
 // 사용자 정보 보기
 router.get('/users/:userId', usersController.getUserInfo)
 
-router.get('/', async (req,res) => {
-	res.json("Hi")
+// 내 정보 수정
+router.patch('/users/:userId', needSignIn, usersController.updateUserInfo)
+
+// 회원탈퇴
+router.delete('/users/:userId', needSignIn, usersController.resign)
+
+router.get('/', async (req, res) => {
+    res.json('Hi')
 })
 
 export default router
