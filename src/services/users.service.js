@@ -14,4 +14,7 @@ export class UsersService{
 	
 	// 계정 검색
 	findUser = async userInfo => await this.usersRepository.findUser(userInfo)
+	
+	// 계정 정보 업데이트
+	updateUser = async (userId,userInfo) => await this.usersRepository.updateUser(userId,userInfo)
 }

@@ -36,6 +36,7 @@ export class UsersController {
 		const refreshToken = jwt.sign({userId: existUser.userId}, process.env.REFRESH_TOKEN_KEY, {expiresIn: '1d'})
 		res.cookie('accessToken', accessToken, {httpOnly: true,expires: new Date(Date.now()+1800000)})
 		res.cookie('refreshToken', refreshToken, {httpOnly: true,expires: new Date(Date.now()+86400000)})
+		await this.usersService.updateUser(existUser.userId,{refreshToken})
 		res.json({email,message: '로그인에 성공했습니다.'})
 	}
 	

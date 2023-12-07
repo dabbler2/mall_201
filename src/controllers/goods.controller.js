@@ -17,7 +17,6 @@ export class GoodsController {
 	}
 	
 	// 상품 등록
-	// status도 넣기
 	postGood = async(req,res,next) => {
 		try{
 			const {goodName, content} = req.body

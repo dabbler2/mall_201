@@ -18,6 +18,7 @@ model Users{
 	createdAt DateTime @default(now())
 	updatedAt DateTime @updatedAt
 	Goods Goods[]
+	refreshToken String? @db.Text
 	@@map("Users")
 }
 

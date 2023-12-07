@@ -8,16 +8,38 @@ dotenv.config()
 const usersRepository = new UsersRepository(prisma)
 const usersService = new UsersService(usersRepository)
 
+const res401 = res => res.status(401).json({message:'로그인이 필요한 페이지입니다.'})
+
 export const needSignIn = async(req,res,next) => {
 	const accessToken = req.cookies.accessToken
-	if(!accessToken) return res.status(401).json({message:'로그인이 필요한 페이지입니다.'})
+	if(!accessToken) return res401(res)
 	
 	try{
 		const {userId} = jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY)
 		const user = await usersService.findUser({userId})
-		if(!user) return res.status(401).json({message:'로그인이 필요한 페이지입니다.'})
+		if(!user) return res401(res)
 		res.locals.userId = userId
 		res.locals.userName = user.userName
 		next()
-	}catch(e){next(e)}
+	}catch(e){
+		if(e.message==='jwt expired') await checkRefreshToken(req,res,next)
+		else next(e)
+	}
+}
+
+const checkRefreshToken = async(req,res,next) => {
+	const refreshToken = req.cookies.refreshToken
+	if(!refreshToken) return res401(res)
+	
+	try{
+		const {userId} = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY)
+		console.log(userId)
+		const user = await usersService.findUser({userId})
+		if(!user || user.refreshToken!==refreshToken) return res401(res)
+		const accessToken = jwt.sign({userId}, process.env.ACCESS_TOKEN_KEY, {expiresIn: '20m'})
+		res.cookie('accessToken', accessToken, {httpOnly: true,expires: new Date(Date.now()+1200000)})
+		res.locals.userId = userId
+		res.locals.userName = user.userName
+		next()
+	}catch(e){res401(res)}
 }
