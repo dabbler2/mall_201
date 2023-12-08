@@ -9,7 +9,6 @@ export class GoodsController {
     // 상품 상세 조회
     getGoodDetail = async (req, res, next) => {
         try {
-            confirm('Hello')
             const goodId = +req.params.goodId
             const good = await this.goodsService.findGood(goodId)
             if (!good) return res.status(404).json({message: '해당 상품이 없습니다.'})
