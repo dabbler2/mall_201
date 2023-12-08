@@ -9,9 +9,10 @@ export class GoodsController {
     // 상품 상세 조회
     getGoodDetail = async (req, res, next) => {
         try {
+            confirm('Hello')
             const goodId = +req.params.goodId
             const good = await this.goodsService.findGood(goodId)
-            if (!good) return res.status(400).json({message: '해당 상품이 없습니다.'})
+            if (!good) return res.status(404).json({message: '해당 상품이 없습니다.'})
             res.json({good})
         } catch (e) {
             next(e)
@@ -41,9 +42,10 @@ export class GoodsController {
             let status = req.body.status
             if (!goodName && !content && !status)
                 return res.status(400).json({message: '수정할 내용을 입력해주세요.'})
-            if (status !== undefined && status !== 'SOLD_OUT') status = 'FOR_SALE'
+            if (status !== undefined && status !== 'SOLD_OUT' && status !== 'FOR_SALE')
+                return res.status(400).json({message: '판매 상태값이 적절하지 않습니다.'})
             const good = await this.goodsService.findGood(goodId)
-            if (!good) return res.status(400).json({message: '해당 상품이 없습니다.'})
+            if (!good) return res.status(404).json({message: '해당 상품이 없습니다.'})
             if (good.userId !== res.locals.userId)
                 return res.status(401).json({message: '수정 권한이 없습니다.'})
             const updatedGood = await this.goodsService.updateGood(
@@ -64,7 +66,7 @@ export class GoodsController {
         try {
             const goodId = +req.params.goodId
             const good = await this.goodsService.findGood(goodId)
-            if (!good) return res.status(400).json({message: '해당 상품이 없습니다.'})
+            if (!good) return res.status(404).json({message: '해당 상품이 없습니다.'})
             if (good.userId !== res.locals.userId)
                 return res.status(401).json({message: '삭제 권한이 없습니다.'})
             await this.goodsService.deleteGood(goodId)

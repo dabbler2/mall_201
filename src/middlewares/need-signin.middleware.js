@@ -38,10 +38,12 @@ const checkRefreshToken = async (req, res, next) => {
         console.log(userId)
         const user = await usersService.findUser({userId})
         if (!user || user.refreshToken !== refreshToken) return res401(res)
-        const accessToken = jwt.sign({userId}, process.env.ACCESS_TOKEN_KEY, {expiresIn: '20m'})
+        const accessToken = jwt.sign({userId}, process.env.ACCESS_TOKEN_KEY, {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRE + 'm'
+        })
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            expires: new Date(Date.now() + 1200000)
+            expires: new Date(Date.now() + process.env.ACCESS_TOKEN_EXPIRE * 60000)
         })
         res.locals.userId = userId
         res.locals.userName = user.userName

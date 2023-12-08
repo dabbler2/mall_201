@@ -7,7 +7,7 @@ export class UsersService {
     createUser = async (email, userName, password) => {
         try {
             const existUser = await this.usersRepository.findUser({email})
-            if (existUser) throw {code: 400, message: '이메일이 이미 사용중입니다.'}
+            if (existUser) throw {code: 409, message: '이메일이 이미 사용중입니다.'}
             await this.usersRepository.createUser(email, userName, password)
         } catch (e) {
             throw e

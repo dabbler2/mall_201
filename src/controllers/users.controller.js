@@ -18,7 +18,7 @@ export class UsersController {
                     .json({message: '이메일이 형식에 맞지 않거나 70글자를 초과합니다.'})
             if (!userName || userName.length > 50)
                 return res.status(400).json({message: '이름은 1글자 이상 50글자 이하여야 합니다.'})
-            if (password.length < 6 || password.length > 50)
+            if (!password || password.length < 6 || password.length > 50)
                 return res
                     .status(400)
                     .json({message: '비밀번호는 6글자 이상 50글자 이하여야 합니다.'})
@@ -28,8 +28,8 @@ export class UsersController {
             const createdUser = await this.usersService.createUser(email, userName, hashPW)
             return res.status(201).json({email, userName, message: '회원가입이 완료되었습니다.'})
         } catch (e) {
-            if (e.code === 400)
-                return res.status(400).json({message: '이메일이 이미 사용중입니다.'})
+            if (e.code === 409)
+                return res.status(409).json({message: '이메일이 이미 사용중입니다.'})
             next(e)
         }
     }
@@ -43,18 +43,18 @@ export class UsersController {
         if (!existUser || !bcrypt.compareSync(password, existUser.hashPW))
             return res.status(400).json({message: '이메일이나 비밀번호를 확인해주세요.'})
         const accessToken = jwt.sign({userId: existUser.userId}, process.env.ACCESS_TOKEN_KEY, {
-            expiresIn: '30m'
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRE + 'm'
         })
         const refreshToken = jwt.sign({userId: existUser.userId}, process.env.REFRESH_TOKEN_KEY, {
-            expiresIn: '1d'
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRE + 'd'
         })
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            expires: new Date(Date.now() + 1800000)
+            expires: new Date(Date.now() + process.env.ACCESS_TOKEN_EXPIRE * 60000)
         })
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            expires: new Date(Date.now() + 86400000)
+            expires: new Date(Date.now() + process.env.REFRESH_TOKEN_EXPIRE * 86400000)
         })
         await this.usersService.updateUser(existUser.userId, {refreshToken})
         res.json({email, message: '로그인에 성공했습니다.'})
@@ -64,7 +64,7 @@ export class UsersController {
     getUserInfo = async (req, res, next) => {
         const userId = +req.params.userId
         const existUser = await this.usersService.findUser({userId})
-        if (!existUser) return res.status(400).json({message: '해당 사용자가 존재하지 않습니다.'})
+        if (!existUser) return res.status(404).json({message: '해당 사용자가 존재하지 않습니다.'})
         const {email, userName, createdAt} = existUser
         res.json({email, userName, createdAt, message: '사용자 정보를 불러왔습니다.'})
     }
