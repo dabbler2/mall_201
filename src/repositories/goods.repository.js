@@ -18,11 +18,5 @@ export class GoodsRepository {
         await this.prisma.goods.update({where: {goodId}, data: {goodName, content, status}})
 
     // 상품 삭제
-    deleteGood = async goodId => {
-        try {
-            await this.prisma.goods.delete({where: {goodId}})
-        } catch (e) {
-            throw e
-        }
-    }
+    deleteGood = async goodId => await this.prisma.goods.delete({where: {goodId}})
 }

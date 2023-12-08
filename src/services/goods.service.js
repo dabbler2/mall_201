@@ -7,31 +7,16 @@ export class GoodsService {
     getGoods = async () => await this.goodsRepository.getGoods()
 
     // 상품 검색
-    findGood = async goodId => {
-        const good = await this.goodsRepository.findGood(goodId)
-        if (!good) throw {code: 400, message: '해당 상품이 없습니다.'}
-        return good
-    }
+    findGood = async goodId => await this.goodsRepository.findGood(goodId)
 
     // 상품 등록
     createGood = async (goodName, userName, userId, content) =>
         await this.goodsRepository.createGood(goodName, userName, userId, content)
 
     // 상품 정보 수정
-    updateGood = async (goodId, goodName, content, status) => {
-        try {
-            return await this.goodsRepository.updateGood(goodId, goodName, content, status)
-        } catch (e) {
-            throw e
-        }
-    }
+    updateGood = async (goodId, goodName, content, status) =>
+        await this.goodsRepository.updateGood(goodId, goodName, content, status)
 
     // 상품 삭제
-    deleteGood = async (goodId, userId) => {
-        try {
-            await this.goodsRepository.deleteGood(goodId)
-        } catch (e) {
-            throw e
-        }
-    }
+    deleteGood = async goodId => await this.goodsRepository.deleteGood(goodId)
 }

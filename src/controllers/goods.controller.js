@@ -11,9 +11,9 @@ export class GoodsController {
         try {
             const goodId = +req.params.goodId
             const good = await this.goodsService.findGood(goodId)
+            if (!good) return res.status(400).json({message: '해당 상품이 없습니다.'})
             res.json({good})
         } catch (e) {
-            if (e.code === 400) return res.status(400).json({message: e.message})
             next(e)
         }
     }
@@ -55,7 +55,6 @@ export class GoodsController {
             )
             res.status(201).json({updatedGood})
         } catch (e) {
-            if (e.code === 400) return res.status(400).json({message: e.message})
             next(e)
         }
     }
@@ -71,7 +70,6 @@ export class GoodsController {
             await this.goodsService.deleteGood(goodId)
             res.redirect(303, '/api/goods')
         } catch (e) {
-            if (e.code === 400) return res.status(400).json({message: e.message})
             next(e)
         }
     }
