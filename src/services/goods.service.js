@@ -27,5 +27,11 @@ export class GoodsService {
     }
 
     // 상품 삭제
-    deleteGood = async (goodId, userId) => await this.goodsRepository.deleteGood(goodId)
+    deleteGood = async (goodId, userId) => {
+        try {
+            await this.goodsRepository.deleteGood(goodId)
+        } catch (e) {
+            throw e
+        }
+    }
 }

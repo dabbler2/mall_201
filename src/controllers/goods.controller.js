@@ -71,6 +71,7 @@ export class GoodsController {
             await this.goodsService.deleteGood(goodId)
             res.redirect(303, '/api/goods')
         } catch (e) {
+            if (e.code === 400) return res.status(400).json({message: e.message})
             next(e)
         }
     }
