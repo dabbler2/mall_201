@@ -6,7 +6,11 @@ DATABASE_URL - 데이터베이스 URL
 
 ACCESS_TOKEN_KEY - JWT access token 비밀키
 
+ACCESS_TOKEN_EXPIRE - access token 만료 시간(분)
+
 REFRESH_TOKEN_KEY - JWT refresh token 비밀키
+
+REFRESH_TOKEN_EXPIRE - refresh token 만료 시간(일)
 
 SALT_ROUND - bcrypt salt 생성 반복수
 
