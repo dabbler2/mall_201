@@ -70,7 +70,7 @@ export class GoodsController {
             if (good.userId !== res.locals.userId)
                 return res.status(401).json({message: '삭제 권한이 없습니다.'})
             await this.goodsService.deleteGood(goodId)
-            res.redirect(303, '/api/goods')
+            res.status(204).json()
         } catch (e) {
             next(e)
         }

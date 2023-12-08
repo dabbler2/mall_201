@@ -99,7 +99,7 @@ export class UsersController {
             if (userId !== res.locals.userId)
                 return res.status(401).json({message: '탈퇴 권한이 없습니다.'})
             await this.usersService.deleteUser(userId)
-            res.redirect(303, '/')
+            res.status(204).json()
         } catch (e) {
             next(e)
         }
