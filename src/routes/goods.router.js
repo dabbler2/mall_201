@@ -14,7 +14,7 @@ const goodsController = new GoodsController(goodsService)
 // 조회 빼고 인증 넣기
 
 // 전체 상품 조회
-router.get('/goods', needSignIn, goodsController.getGoods)
+router.get('/goods', goodsController.getGoods)
 
 // 상품 상세 조회
 router.get('/goods/:goodId', goodsController.getGoodDetail)
